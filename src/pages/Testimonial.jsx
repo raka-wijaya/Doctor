@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-// Anda perlu mengimpor gambar-gambar ini
 import samyWhite from '../assets/Testimoni/Ellipse 17.svg';
 import arthurNorthon from '../assets/Testimoni/Ellipse 17 (1).svg';
 import kevinSmith from '../assets/Testimoni/Ellipse 17 (2).svg';
@@ -38,12 +37,17 @@ const Testimonials = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const carouselRef = useRef(null);
 
+  // Menentukan jumlah slide yang terlihat berdasarkan ukuran layar
+  // Anda bisa menggunakan state atau window.innerWidth, tapi ini lebih sederhana
+  const slidesPerView = window.innerWidth >= 768 ? 2 : 1;
+  const maxSlides = testimonials.length - slidesPerView;
+
   const handleNext = () => {
-    setCurrentSlide(prev => (prev === testimonials.length - 2 ? 0 : prev + 1));
+    setCurrentSlide((prev) => (prev === maxSlides ? 0 : prev + 1));
   };
 
   const handlePrev = () => {
-    setCurrentSlide(prev => (prev === 0 ? testimonials.length - 2 : prev - 1));
+    setCurrentSlide((prev) => (prev === 0 ? maxSlides : prev - 1));
   };
 
   return (
@@ -51,10 +55,12 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center space-y-6 text-center">
           <h1 className="font-sans font-semibold text-3xl md:text-4xl text-[#031432]">
-            What our great customers say about Dr. <br className="hidden md:inline" /> Matthew Anderson
+            What our great customers say about Dr.{" "}
+            <br className="hidden md:inline" /> Matthew Anderson
           </h1>
           <p className="font-sans text-base text-[#6C87AE] max-w-xl">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore
           </p>
         </div>
 
@@ -73,19 +79,29 @@ const Testimonials = () => {
             <div
               ref={carouselRef}
               className="flex transition-transform duration-500 ease-in-out"
-              style={{ transform: `translateX(-${currentSlide * 50}%)` }}
+              // Menggunakan persentase pergeseran yang dinamis
+              style={{
+                transform: `translateX(-${
+                  currentSlide * (100 / slidesPerView)
+                }%)`,
+              }}
             >
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="flex-none w-1/2 p-2"
+                  // Menggunakan width penuh di mobile dan setengah di desktop
+                  className="flex-none w-full md:w-1/2 p-2"
                 >
                   <div className="bg-white rounded-3xl p-6 shadow-md h-full flex flex-col justify-between">
                     <p className="font-sans font-light text-base text-[#031432] mb-4">
                       {testimonial.text}
                     </p>
                     <div className="flex gap-4 items-center mt-auto">
-                      <img src={testimonial.image} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" />
+                      <img
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        className="w-12 h-12 rounded-full object-cover"
+                      />
                       <div className="flex flex-col">
                         <h2 className="font-sans font-medium text-base text-[#00BFA5]">
                           {testimonial.name}
